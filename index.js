@@ -1,8 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
-import { registerValidation } from "./validations/auth.js";
+import {
+  loginValidation,
+  registerValidation,
+} from "./validations/validations.js";
 import checkAuth from "./utils/checkAuth.js";
 import { getMe, login, register } from "./controllers/UserController.js";
+import { create } from "./controllers/NotesController.js";
 
 mongoose
   .connect(
@@ -15,11 +19,11 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/auth/login", login);
-
+app.post("/auth/login", loginValidation, login);
 app.post("/auth/register", registerValidation, register);
-
 app.get("/auth/me", checkAuth, getMe);
+
+app.post("/notes", create);
 
 app.listen(4444, (err) => {
   if (err) {
