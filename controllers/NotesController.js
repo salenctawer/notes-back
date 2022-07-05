@@ -11,6 +11,59 @@ export const getAll = async (req, res) => {
     });
   }
 };
+export const getOne = async (req, res) => {
+  try {
+    const notesId = req.params.id;
+    NotesModel.findById(notesId, (err, doc) => {
+      if (err) {
+        console.log(err);
+      }
+      if (!doc) {
+        return res.status(404).json({
+          message: "Заметка не найдена",
+        });
+      }
+      res.json(doc);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Заметка не найдена",
+    });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const notesId = req.params.id;
+    NotesModel.findOneAndDelete(
+      {
+        _id: notesId,
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({
+            message: "Не удалось удалить заметку",
+          });
+        }
+        if (!doc) {
+          return res.status(404).json({
+            message: "Заметка не найдена",
+          });
+        }
+        res.json({
+          success: true,
+        });
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось удалить заметку",
+    });
+  }
+};
 
 export const create = async (req, res) => {
   try {
