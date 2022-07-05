@@ -15,6 +15,7 @@ import {
   remove,
   update,
 } from "./controllers/NotesController.js";
+import handleValidErrors from "./utils/handleValidErrors.js";
 
 mongoose
   .connect(
@@ -37,10 +38,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
+
 app.use("/uploads", express.static("uploads"));
 
-app.post("/auth/login", loginValidation, login);
-app.post("/auth/register", registerValidation, register);
+app.post("/auth/login", loginValidation, handleValidErrors, login);
+app.post("/auth/register", registerValidation, handleValidErrors, register);
 app.get("/auth/me", checkAuth, getMe);
 
 app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
@@ -52,8 +54,14 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 app.get("/notes", getAll);
 app.get("/notes/:id", getOne);
 app.delete("/notes/:id", checkAuth, remove);
-app.patch("/notes/:id", checkAuth, update);
-app.post("/notes", checkAuth, notesCreateValidation, create);
+app.patch(
+  "/notes/:id",
+  checkAuth,
+  notesCreateValidation,
+  handleValidErrors,
+  update
+);
+app.post("/notes", checkAuth, notesCreateValidation, handleValidErrors, create);
 
 app.listen(4444, (err) => {
   if (err) {
