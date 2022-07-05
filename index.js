@@ -12,6 +12,7 @@ import {
   getAll,
   getOne,
   remove,
+  update,
 } from "./controllers/NotesController.js";
 
 mongoose
@@ -29,9 +30,10 @@ app.post("/auth/login", loginValidation, login);
 app.post("/auth/register", registerValidation, register);
 app.get("/auth/me", checkAuth, getMe);
 
-app.delete("/notes/:id", remove);
+app.delete("/notes/:id", checkAuth, remove);
 app.get("/notes", getAll);
 app.get("/notes/:id", getOne);
+app.patch("/notes/:id", checkAuth, update);
 app.post("/notes", checkAuth, notesCreateValidation, create);
 
 app.listen(4444, (err) => {

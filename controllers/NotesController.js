@@ -84,3 +84,30 @@ export const create = async (req, res) => {
     });
   }
 };
+
+export const update = async (req, res) => {
+  try {
+    const notesId = req.params.id;
+    await NotesModel.updateOne(
+      {
+        _id: notesId,
+      },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        important: req.body.important,
+        deadline: req.body.deadline,
+        user: req.userId,
+      }
+    );
+
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось обновить заметку",
+    });
+  }
+};
