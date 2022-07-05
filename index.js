@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 import {
   loginValidation,
   registerValidation,
+  notesCreateValidation,
 } from "./validations/validations.js";
 import checkAuth from "./utils/checkAuth.js";
 import { getMe, login, register } from "./controllers/UserController.js";
-import { create } from "./controllers/NotesController.js";
+import { create, getAll } from "./controllers/NotesController.js";
 
 mongoose
   .connect(
@@ -23,7 +24,8 @@ app.post("/auth/login", loginValidation, login);
 app.post("/auth/register", registerValidation, register);
 app.get("/auth/me", checkAuth, getMe);
 
-app.post("/notes", create);
+app.get("/notes", getAll);
+app.post("/notes", checkAuth, notesCreateValidation, create);
 
 app.listen(4444, (err) => {
   if (err) {
