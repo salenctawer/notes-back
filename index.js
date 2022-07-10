@@ -12,6 +12,7 @@ import { getMe, login, register } from "./controllers/UserController.js";
 import {
   create,
   getAll,
+  getNotesUser,
   getOne,
   remove,
   update,
@@ -65,6 +66,7 @@ app.patch(
   update
 );
 app.post("/notes", checkAuth, notesCreateValidation, handleValidErrors, create);
+app.get("/notes/user/:id", getNotesUser);
 
 app.listen(4444, (err) => {
   if (err) {
